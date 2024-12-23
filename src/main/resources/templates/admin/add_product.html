@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="ISO-8859-1">
+<title>Add Products</title>
+</head>
+<body>
+	<section>
+        <div class="container p-5 mt-5">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <div class="card card-sh">
+                        <div class="class-header text-center fs-4 mt-4">Add product</div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label>Enter Title</label>
+                                    <input type="text" name="title" class="form-control">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Description</label>
+                                    <textarea rows="3" cols= "" class="form-control"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Category</label>
+                                    <select class="form-control">
+                                        <option>---select---</option>
+                                        <option>Electronics</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Enter Price</label>
+                                    <input type="text" name="price" class="form-control">
+                                </div>
+                                <div class="row">
+                                    <div class="mb-3 col">
+                                        <label>Stock</label>
+                                        <input type="text" name="stock" class="form-control">
+                                    </div>
+                                    <div class="mb-3 col">
+                                        <label>Upload Image</label>
+                                        <input type="file" name="uploadImg" class="form-control">
+
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-primary col-md-12"> Submit </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
