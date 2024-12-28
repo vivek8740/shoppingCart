@@ -11,9 +11,10 @@ public interface CategoryService {
      Category getCategoryById(Integer id);
      List<Category> getAllCategories();
      Category updateCategory(Category category);
-     void deleteCategory(Integer id);
+     Boolean deleteCategory(int id);
 
      //Utility Methods
      Boolean isCategoryExist(String categoryName);
+     Category findCatetoryById(int id);
 
 }

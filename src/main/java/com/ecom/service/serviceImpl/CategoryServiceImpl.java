@@ -1,9 +1,11 @@
 package com.ecom.service.serviceImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import com.ecom.model.Category;
 import com.ecom.repository.CategoryRepositroy;
@@ -32,12 +34,25 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public Category updateCategory(Category category) {
-        return categoryRepositroy.save(category);
+        boolean isAvailabe = categoryRepositroy.existsByCategoryName(category.getCategoryName());
+        if(!isAvailabe)
+        return null;
+        else{
+            return categoryRepositroy.save(category);
+        }
     }
 
     @Override
-    public void deleteCategory(Integer id) {
-        categoryRepositroy.delete(categoryRepositroy.findById(id).get());
+    public Boolean deleteCategory(int id) {
+        Category category = categoryRepositroy.findById(id).orElse(null);
+
+        if(!ObjectUtils.isEmpty(category)){
+            categoryRepositroy.delete(categoryRepositroy.findById(id).get());
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     @Override
@@ -45,4 +60,9 @@ public class CategoryServiceImpl implements CategoryService{
         return categoryRepositroy.existsByCategoryName(categoryName);
     }
 
+    @Override
+    public Category findCatetoryById(int id) {
+        Category category = categoryRepositroy.findById(id).orElse(null);
+        return category;
+    }
 }
