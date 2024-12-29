@@ -91,21 +91,23 @@ public class AdminController {
     public String loadEditCategory(@PathVariable int id,Model model){
 
         model.addAttribute("category", categoryService.findCatetoryById(id));
-        return "admin/edit_categoty";
+        return "admin/edit_category";
     }
 
     @PostMapping("/updateCategory")
     public String updateeCategory(@ModelAttribute Category category,
                                   @RequestParam("file") MultipartFile file,
                                    HttpSession session){
-
+        
+        String imageName = file != null ? file.getOriginalFilename() : "default.jpg"; 
+        category.setImageName(imageName);
         Category updatedCategory = categoryService.updateCategory(category);
-        if (ObjectUtils.isEmpty(updatedCategory)){
-            session.setAttribute("errorMsg", "Category Not Exist!!!");
+        if (!ObjectUtils.isEmpty(updatedCategory)){
+            session.setAttribute("successMsg", "Category Updated!!!");
         }else{
             session.setAttribute("errorMsg", "Something Went Wrong ...");
         }
-        return "redirect:/admin/category";
+        return "redirect:loadEditCategory/"+category.getCategoryId();
     }
     
 

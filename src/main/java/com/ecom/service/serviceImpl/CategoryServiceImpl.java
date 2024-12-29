@@ -34,11 +34,15 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public Category updateCategory(Category category) {
-        boolean isAvailabe = categoryRepositroy.existsByCategoryName(category.getCategoryName());
-        if(!isAvailabe)
+        Category isAvailabe = categoryRepositroy.findById(category.getCategoryId()).get();
+        if(ObjectUtils.isEmpty(isAvailabe))
         return null;
         else{
-            return categoryRepositroy.save(category);
+            Category dbCategory = categoryRepositroy.findById(category.getCategoryId()).get();
+            dbCategory.setCategoryName(category.getCategoryName());
+            dbCategory.setImageName(category.getImageName());
+            dbCategory.setIsActive(category.getIsActive());
+            return categoryRepositroy.save(dbCategory);
         }
     }
 
