@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -41,7 +41,9 @@ public class AdminController {
     }
 
     @GetMapping("/addProduct")
-    public String addProduct() {
+    public String addProduct(Model model ) {
+        List<Category> categoryList = categoryService.getAllCategories();
+        model.addAttribute("categories", categoryList);
         return "admin/add_product";
     }
 
@@ -67,10 +69,12 @@ public class AdminController {
                 session.setAttribute("errorMsg", "Not Saved,Something Wrong!!!");
             else{
 
-                File saveFile = new ClassPathResource("static/img").getFile();
-                Path path = Paths.get(saveFile.getAbsolutePath()+File.separator+"category_img"+File.separator+file.getOriginalFilename());
-                System.out.println(path);
-                Files.copy(file.getInputStream(),path,StandardCopyOption.REPLACE_EXISTING);
+                if(!file.isEmpty()){
+                    File saveFile = new ClassPathResource("static/img").getFile();
+                    Path path = Paths.get(saveFile.getAbsolutePath()+File.separator+"category_img"+File.separator+file.getOriginalFilename());
+                    System.out.println(path);
+                    Files.copy(file.getInputStream(),path,StandardCopyOption.REPLACE_EXISTING);
+                }
                 session.setAttribute("successMsg", "Category Saved...");
             }
         }
@@ -97,17 +101,21 @@ public class AdminController {
     @PostMapping("/updateCategory")
     public String updateeCategory(@ModelAttribute Category category,
                                   @RequestParam("file") MultipartFile file,
-                                   HttpSession session){
+                                   HttpSession session) throws IOException{
         
         String imageName = file != null ? file.getOriginalFilename() : "default.jpg"; 
         category.setImageName(imageName);
         Category updatedCategory = categoryService.updateCategory(category);
         if (!ObjectUtils.isEmpty(updatedCategory)){
+            File saveFile = new ClassPathResource("static/img").getFile();
+            Path path = Paths.get(saveFile.getAbsolutePath()+File.separator+"category_img"+File.separator+file.getOriginalFilename());
+            System.out.println(path);
+            Files.copy(file.getInputStream(),path,StandardCopyOption.REPLACE_EXISTING);
             session.setAttribute("successMsg", "Category Updated!!!");
         }else{
             session.setAttribute("errorMsg", "Something Went Wrong ...");
         }
-        return "redirect:loadEditCategory/"+category.getCategoryId();
+        return "redirect:/admin/loadEditCategory/"+category.getCategoryId();
     }
     
 
