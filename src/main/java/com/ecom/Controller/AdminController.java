@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ecom.helper.HelperServiceImpl;
 import com.ecom.model.Category;
+import com.ecom.model.Product;
 import com.ecom.service.CategoryService;
+import com.ecom.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,16 +38,15 @@ public class AdminController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    HelperServiceImpl helper;
+
     @GetMapping("/")
     public String getIndex() {
         return "admin/index";
-    }
-
-    @GetMapping("/addProduct")
-    public String addProduct(Model model ) {
-        List<Category> categoryList = categoryService.getAllCategories();
-        model.addAttribute("categories", categoryList);
-        return "admin/add_product";
     }
 
     @GetMapping("/category")
@@ -70,10 +72,11 @@ public class AdminController {
             else{
 
                 if(!file.isEmpty()){
-                    File saveFile = new ClassPathResource("static/img").getFile();
-                    Path path = Paths.get(saveFile.getAbsolutePath()+File.separator+"category_img"+File.separator+file.getOriginalFilename());
-                    System.out.println(path);
-                    Files.copy(file.getInputStream(),path,StandardCopyOption.REPLACE_EXISTING);
+                    // File saveFile = new ClassPathResource("static/img").getFile();
+                    // Path path = Paths.get(saveFile.getAbsolutePath()+File.separator+"category_img"+File.separator+file.getOriginalFilename());
+                    // System.out.println(path);
+                    // Files.copy(file.getInputStream(),path,StandardCopyOption.REPLACE_EXISTING);
+                    helper.saveFileToPath(file, "category_img");
                 }
                 session.setAttribute("successMsg", "Category Saved...");
             }
@@ -117,6 +120,39 @@ public class AdminController {
         }
         return "redirect:/admin/loadEditCategory/"+category.getCategoryId();
     }
-    
+
+
+
+    @PostMapping("/addProduct")
+    public String addProduct(@ModelAttribute Product product,
+                             @RequestParam("file") MultipartFile file,
+                             HttpSession session ) throws IOException {
+        
+        String imageName = file != null ? file.getOriginalFilename() : "default.jpg";
+        product.setProductImage(imageName);
+        Product savedProduct = productService.saveProduct(product); 
+
+        if(!ObjectUtils.isEmpty(savedProduct)){
+            if(!file.isEmpty())
+            helper.saveFileToPath(file, "product_img");
+
+            session.setAttribute("successMsg", "Product saved...");
+              
+        }else{
+            session.setAttribute("errorMsg", "Something went wrong!!!");
+        }
+        
+
+        return "redirect:/admin/loadAddProduct";
+    }
+
+
+    @GetMapping("/loadAddProduct")
+    public String loadAddProduct(Model model){
+        List<Category> categories = categoryService.getAllCategories();
+        model.addAttribute("categories", categories);
+        return "admin/add_product";
+        
+    }
 
 }

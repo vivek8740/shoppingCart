@@ -35,6 +35,6 @@ public class Product {
 
     private String productImage;
 
-    private Category category;
+    private String category;
 
 }
