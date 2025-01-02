@@ -155,4 +155,28 @@ public class AdminController {
         
     }
 
+    @GetMapping("/products")
+    public String getAllProducts(Model model){
+        List<Product> prodList = productService.getAllProducts();
+        model.addAttribute("products", prodList);
+        return "admin/products";
+
+    }
+
+    @GetMapping("/loadEditProduct/{id}")
+    public String loadEditProduct(@PathVariable int id,Model model){
+
+        model.addAttribute("product", productService.getProductById(id));
+        return "admin/add_product";
+    }
+
+    @GetMapping("/deleteProduct/{id}")
+    public String deleteProduct(@PathVariable int id,
+                                HttpSession session){
+        boolean status = productService.deleteProduct(id);
+        if (status) session.setAttribute("successMsg", "Category Deleted...");
+        else session.setAttribute("errorMsg", "Something Went Wrong ...");
+        return "redirect:/admin/products";
+    }
+
 }

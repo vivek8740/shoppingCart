@@ -50,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(int productId) {
+    public boolean deleteProduct(int productId) {
         // Validate productId
         if (productId <= 0) {
             throw new IllegalArgumentException("Invalid product ID");
@@ -61,6 +61,8 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productRepository.deleteById(productId);
+
+        return true;
     }
 
     // Helper method to check if a category exists

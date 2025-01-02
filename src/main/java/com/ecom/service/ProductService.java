@@ -16,7 +16,7 @@ public interface ProductService {
     List<Product> getAllProducts();
 
     // Delete a product by ID
-    void deleteProduct(int productId);
+    boolean deleteProduct(int productId);
 
     // Get products by category (optional, depending on your use case)
     //List<Product> getProductsByCategory(int categoryId);
