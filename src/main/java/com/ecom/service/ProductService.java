@@ -2,7 +2,6 @@ package com.ecom.service;
 
 import com.ecom.model.Product;
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductService {
 
@@ -10,13 +9,15 @@ public interface ProductService {
     Product saveProduct(Product product);
 
     // Get product by ID
-    Optional<Product> getProductById(int productId);
+    Product getProductById(int productId);
 
     // Get all products
     List<Product> getAllProducts();
 
     // Delete a product by ID
     boolean deleteProduct(int productId);
+
+    Product updateProduct(Product product);
 
     // Get products by category (optional, depending on your use case)
     //List<Product> getProductsByCategory(int categoryId);

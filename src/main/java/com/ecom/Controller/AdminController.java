@@ -122,7 +122,7 @@ public class AdminController {
     }
 
 
-
+    /************************* Product module *******************************/
     @PostMapping("/addProduct")
     public String addProduct(@ModelAttribute Product product,
                              @RequestParam("file") MultipartFile file,
@@ -163,11 +163,11 @@ public class AdminController {
 
     }
 
-    @GetMapping("/loadEditProduct/{id}")
-    public String loadEditProduct(@PathVariable int id,Model model){
-
+    @GetMapping("/editProduct/{id}")
+    public String editProduct(@PathVariable int id,Model model){
         model.addAttribute("product", productService.getProductById(id));
-        return "admin/add_product";
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "admin/edit_product";
     }
 
     @GetMapping("/deleteProduct/{id}")
@@ -177,6 +177,27 @@ public class AdminController {
         if (status) session.setAttribute("successMsg", "Category Deleted...");
         else session.setAttribute("errorMsg", "Something Went Wrong ...");
         return "redirect:/admin/products";
+    }
+
+    @PostMapping("/updateProduct")
+    public String updateProduc(@ModelAttribute Product product,
+                                  @RequestParam("file") MultipartFile file,
+                                   HttpSession session) throws IOException{
+
+        String imageName = file != null ? file.getOriginalFilename() : "default.jpg";
+        product.setProductImage(imageName);
+        Product updatedproduct = productService.updateProduct(product);
+
+        if(!ObjectUtils.isEmpty(updatedproduct)){
+            if(!file.isEmpty())
+            helper.saveFileToPath(file, "product_img");
+
+            session.setAttribute("successMsg", "Product updated...");
+
+        }else{
+            session.setAttribute("errorMsg", "Something went wrong!!!");
+        }
+        return "redirect:/admin/editProduct/"+updatedproduct.getProductId();
     }
 
 }

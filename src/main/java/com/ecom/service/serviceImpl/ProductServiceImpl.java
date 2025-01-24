@@ -7,8 +7,9 @@ import com.ecom.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -35,13 +36,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<Product> getProductById(int productId) {
+    public Product getProductById(int productId) {
         // Validate productId
         if (productId <= 0) {
             throw new IllegalArgumentException("Invalid product ID");
         }
 
-        return productRepository.findById(productId);
+        return productRepository.findById(productId).get();
     }
 
     @Override
@@ -65,6 +66,22 @@ public class ProductServiceImpl implements ProductService {
         return true;
     }
 
+
+    @Override
+    public Product updateProduct(Product product) {
+       Product dbProduct = productRepository.findById(product.getProductId()).get();
+        if(ObjectUtils.isEmpty(dbProduct))
+        return null;
+        else{
+            dbProduct.setTitle(product.getTitle());
+            dbProduct.setDescription(product.getDescription());
+            dbProduct.setPrice(product.getPrice());
+            dbProduct.setStock(product.getStock());
+            dbProduct.setCategory(product.getCategory());
+            dbProduct.setProductImage(product.getProductImage());
+        }
+        return productRepository.save(product);
+    }
     // Helper method to check if a category exists
     private boolean categoryExists(int categoryId) {
         // Assuming you have a CategoryRepository, you can inject it here
