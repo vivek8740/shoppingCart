@@ -38,4 +38,10 @@ public class HelperServiceImpl implements HelperService{
         
     }
 
+    @Override
+    public boolean validateDiscountValue(int value) {
+        return value >= 0 && value <= 100;
+    }
+
+
 }

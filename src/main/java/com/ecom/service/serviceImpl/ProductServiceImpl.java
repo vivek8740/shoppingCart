@@ -29,6 +29,12 @@ public class ProductServiceImpl implements ProductService {
         // Check if the category exists
 
         try {
+            product.setDiscount(product.getDiscount());
+            
+            //Calculate and set the final price.
+            double val = calculateDiscountPrice(product.getPrice(), product.getDiscount());
+            product.setDiscountPrice(val);
+
             return productRepository.save(product);
         } catch (DataIntegrityViolationException e) {
             throw new RuntimeException("Error saving product. Data integrity violation: " + e.getMessage());
@@ -76,6 +82,13 @@ public class ProductServiceImpl implements ProductService {
             dbProduct.setTitle(product.getTitle());
             dbProduct.setDescription(product.getDescription());
             dbProduct.setPrice(product.getPrice());
+
+            //Discount Calculation : Calculate and set the final price.
+            product.setDiscount(product.getDiscount());
+            double val = calculateDiscountPrice(product.getPrice(), product.getDiscount());
+            product.setDiscountPrice(val);
+
+
             dbProduct.setStock(product.getStock());
             dbProduct.setCategory(product.getCategory());
             dbProduct.setProductImage(product.getProductImage());
@@ -114,5 +127,10 @@ public class ProductServiceImpl implements ProductService {
         if (product.getCategory() == null) {
             throw new IllegalArgumentException("Product must have a valid category");
         }
+    }
+
+    private double calculateDiscountPrice(Double actualPrice, int discount){
+        double discVal = actualPrice * discount * 0.01 ;
+        return actualPrice - discVal;
     }
 }

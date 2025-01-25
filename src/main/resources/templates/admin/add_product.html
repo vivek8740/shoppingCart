@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{base::layout(~{::section})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+
 <head>
-<meta charset="ISO-8859-1">
-<title>Add Products</title>
+    <meta charset="ISO-8859-1">
+    <title>Add Products</title>
 </head>
+
 <body>
-	<section>
+    <section>
         <div class="container p-5 mt-5">
             <div class="row">
                 <div class="col-md-6 offset-md-3">
@@ -16,12 +17,12 @@
                             <th:block th:if="${session.successMsg}">
                                 <p class="text-success fw-bold">[[${session.successMsg}]]</p>
                                 <th:block th:text="${@helperServiceImpl.removeSessionMessage()}"></th:block>
-                              </th:block>
-      
-                              <th:block th:if="${session.errorMsg}">
+                            </th:block>
+
+                            <th:block th:if="${session.errorMsg}">
                                 <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
                                 <th:block th:text="${@helperServiceImpl.removeSessionMessage()}"></th:block>
-                              </th:block>
+                            </th:block>
                         </div>
                         <div class="card-body">
                             <form action="/admin/addProduct" method="post" enctype="multipart/form-data">
@@ -32,7 +33,7 @@
 
                                 <div class="mb-3">
                                     <label>Description</label>
-                                    <textarea rows="3" cols= "" name="description" class="form-control"></textarea>
+                                    <textarea rows="3" cols="" name="description" class="form-control"></textarea>
                                 </div>
 
                                 <div class="mb-3">
@@ -47,20 +48,26 @@
                                     <label>Enter Price</label>
                                     <input type="number" name="price" class="form-control">
                                 </div>
-                                <div class="row">
-                                    <div class="mb-3 col">
-                                        <label>Stock</label>
-                                        <input type="text" name="stock" class="form-control">
-                                    </div>
-                                    <div class="mb-3 col">
-                                        <label>Upload Image</label>
-                                        <input type="file" name="file" class="form-control">
+                                <div class="mb-3">
+                                    <label>Enter Discount</label>
+                                    <input type="number" name="discount" class="form-control">
+                                </div>
+                                <div class="mb-3">
 
+                                    <div class="row">
+                                        <div class="mb-3 col">
+                                            <label>Stock</label>
+                                            <input type="text" name="stock" class="form-control">
+                                        </div>
+                                        <div class="mb-3 col">
+                                            <label>Upload Image</label>
+                                            <input type="file" name="file" class="form-control">
+
+                                        </div>
                                     </div>
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary col-md-12"> Submit </button>
-                                </div>
+                                    <div>
+                                        <button class="btn btn-primary col-md-12"> Submit </button>
+                                    </div>
                             </form>
                         </div>
                     </div>
@@ -69,4 +76,5 @@
         </div>
     </section>
 </body>
+
 </html>

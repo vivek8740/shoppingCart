@@ -10,4 +10,6 @@ public interface HelperService {
 
     public void saveFileToPath(MultipartFile file,String location) throws IOException;
 
+    public boolean validateDiscountValue(int value);
+
 }
