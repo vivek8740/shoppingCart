@@ -19,6 +19,8 @@ public interface ProductService {
 
     Product updateProduct(Product product);
 
+    List<Product> getAllActiveProducts();
+
     // Get products by category (optional, depending on your use case)
     //List<Product> getProductsByCategory(int categoryId);
 

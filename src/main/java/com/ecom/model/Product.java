@@ -41,4 +41,6 @@ public class Product {
 
     private String category;
 
+    private Boolean isActive;
+
 }

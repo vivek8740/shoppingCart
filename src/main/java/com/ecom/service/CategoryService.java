@@ -16,5 +16,6 @@ public interface CategoryService {
      //Utility Methods
      Boolean isCategoryExist(String categoryName);
      Category findCatetoryById(int id);
+     List<Category> getActiveCategories();
 
 }

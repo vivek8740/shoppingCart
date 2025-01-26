@@ -57,6 +57,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> getAllActiveProducts() {
+        List<Product> products = productRepository.findByIsActiveTrue();
+        return products;
+    }
+
+    @Override
     public boolean deleteProduct(int productId) {
         // Validate productId
         if (productId <= 0) {
@@ -88,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
             double val = calculateDiscountPrice(product.getPrice(), product.getDiscount());
             product.setDiscountPrice(val);
 
-
+            dbProduct.setIsActive(product.getIsActive());
             dbProduct.setStock(product.getStock());
             dbProduct.setCategory(product.getCategory());
             dbProduct.setProductImage(product.getProductImage());

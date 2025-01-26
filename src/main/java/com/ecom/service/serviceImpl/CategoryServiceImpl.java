@@ -69,4 +69,10 @@ public class CategoryServiceImpl implements CategoryService{
         Category category = categoryRepositroy.findById(id).orElse(null);
         return category;
     }
+
+    @Override
+    public List<Category> getActiveCategories() {
+        List<Category> activeCategories = categoryRepositroy.findByIsActiveTrue();
+        return activeCategories;
+    }
 }
