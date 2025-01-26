@@ -24,14 +24,22 @@
 
 		<div class="container-fluid mt-1">
 			<div class="row">
-				<div class="col-md-2">
+				<div class="col-md-2 p-1">
 
 					<div class="card shadow-sm p-0 mb-5 bg-body-tertiary rounded">
 						<div class="list-group">
-							<a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-							Categories
+							<p class="fs-5">Category</p>
+							<a href="/products" 
+							class="list-group-item list-group-item-action" 
+							aria-current="true"
+							th:classappend="${paramValue == '' } ? 'active' : '' "
+							>
+							All
 							</a>
-							<a href="#" th:each="c:${categories}"
+							<a 
+							th:each="c:${categories}" 
+							th:href="@{'/products?category='+${c.categoryName}}"
+							th:classappend="${paramValue == c.categoryName} ? 'active' : '' "
 							class="list-group-item list-group-item-action">[[${c.categoryName}]]</a>
 						</div>
 					</div>

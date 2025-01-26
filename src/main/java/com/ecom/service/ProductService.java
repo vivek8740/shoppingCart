@@ -21,6 +21,8 @@ public interface ProductService {
 
     List<Product> getAllActiveProducts();
 
+    List<Product> getAllActiveProductsBasedOnCategory(String category);
+
     // Get products by category (optional, depending on your use case)
     //List<Product> getProductsByCategory(int categoryId);
 

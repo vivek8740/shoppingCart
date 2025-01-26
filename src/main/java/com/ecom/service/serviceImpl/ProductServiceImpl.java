@@ -101,6 +101,15 @@ public class ProductServiceImpl implements ProductService {
         }
         return productRepository.save(product);
     }
+
+    @Override
+    public List<Product> getAllActiveProductsBasedOnCategory(String category) {
+        if(ObjectUtils.isEmpty(category))
+        return productRepository.findByIsActiveTrue();
+        else
+        return productRepository.findByCategoryAndIsActiveTrue(category);
+    }
+
     // Helper method to check if a category exists
     private boolean categoryExists(int categoryId) {
         // Assuming you have a CategoryRepository, you can inject it here
