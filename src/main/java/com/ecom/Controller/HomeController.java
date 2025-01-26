@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ecom.model.Category;
@@ -64,9 +65,11 @@ public class HomeController {
         return "product";
     }
 
-    @GetMapping(value = "/product")
-    public String getProduct() {
+    @GetMapping(value = "/product/{id}")
+    public String getProduct(@PathVariable int id, Model model) {
         logger.info("Accessed the product details page.");
+        Product productByID = productService.getProductById(id);
+        model.addAttribute("product", productByID);
         return "view_product";
     }
 }
