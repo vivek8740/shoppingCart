@@ -1,5 +1,6 @@
 package com.ecom.Controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -7,14 +8,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ecom.helper.HelperService;
 import com.ecom.model.Category;
 import com.ecom.model.Product;
+import com.ecom.model.User;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
+import com.ecom.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
@@ -26,6 +36,12 @@ public class HomeController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    HelperService helperService;
 
     @GetMapping(value = "/")
     public String getIndex() {
@@ -45,13 +61,34 @@ public class HomeController {
         return "register";
     }
 
+    @PostMapping("/addUser")
+    public String addUser(@ModelAttribute User user,
+            @RequestParam("img") MultipartFile file,
+            HttpSession session) throws IOException {
+
+        String profileImage = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
+        user.setProfileImage(profileImage);
+        User savedUser = userService.registerUser(user);
+        if (!ObjectUtils.isEmpty(savedUser)) {
+            if (!file.isEmpty()) {
+                helperService.saveFileToPath(file, "profile_img");
+            }
+            session.setAttribute("successMsg", "User Registered Successfully");
+        } else {
+            session.setAttribute("errorMsg", "Someting went wrong.");
+        }
+
+        return "redirect:/register";
+
+    }
+
     @GetMapping(value = "/products")
     public String getProducts(Model model, @RequestParam(value = "category", defaultValue = "") String category) {
         logger.info("Accessed the products page with category filter: {}", category);
 
         // Fetch products and categories
         List<Product> products = productService.getAllActiveProductsBasedOnCategory(category);
-        //List<Product> products = productService.getAllActiveProducts();
+        // List<Product> products = productService.getAllActiveProducts();
         List<Category> categories = categoryService.getActiveCategories();
 
         // Log the number of products and categories retrieved

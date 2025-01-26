@@ -58,10 +58,10 @@
 								<p>Free Shipping</p>
 							</div>
 							<th:block th:if="${product.stock>0}">
-								<a href="login.html" class="btn btn-danger">Add to Cart</a>
+								<a href="/login" class="btn btn-danger">Add to Cart</a>
 							</th:block>
 							<th:block th:unless="${product.stock>0}">
-								<a href="login.html" class="btn btn-danger">Notify</a>
+								<a href="/login" class="btn btn-danger">Notify</a>
 							</th:block>
 						</div>
 

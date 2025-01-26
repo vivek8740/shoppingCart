@@ -24,7 +24,7 @@ public class HelperServiceImpl implements HelperService{
         HttpServletRequest request = ((ServletRequestAttributes)(RequestContextHolder.getRequestAttributes())).getRequest();
         HttpSession session = request.getSession();
         session.removeAttribute("errorMsg");
-        session.removeAttribute("successrMsg");
+        session.removeAttribute("successMsg");
         
     }
 
