@@ -51,6 +51,11 @@ public class HomeController {
             User loggedUser = userService.findUserByEmail(email);
             model.addAttribute("user", loggedUser);
         }
+
+        List<Category> categories = categoryService.getActiveCategories();
+
+        //To show active catogries in banner
+        model.addAttribute("categories", categories);
     }
 
     @GetMapping(value = "/")

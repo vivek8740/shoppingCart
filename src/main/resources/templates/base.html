@@ -37,12 +37,7 @@
               Category
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
+              <li th:each="c:${categories}"><a class="dropdown-item" th:href="@{'/products?category='+${c.categoryName}}">[[${c.categoryName}]]</a></li>
             </ul>
           </li>
         </ul>
