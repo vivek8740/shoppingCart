@@ -1,6 +1,7 @@
 package com.ecom.Controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -42,6 +43,15 @@ public class HomeController {
 
     @Autowired
     HelperService helperService;
+
+    @ModelAttribute
+    public void getUserDetails(Principal principal , Model model){
+        if(principal != null){
+            String email = principal.getName();
+            User loggedUser = userService.findUserByEmail(email);
+            model.addAttribute("user", loggedUser);
+        }
+    }
 
     @GetMapping(value = "/")
     public String getIndex() {

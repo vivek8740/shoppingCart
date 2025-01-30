@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ecom.helper.HelperServiceImpl;
 import com.ecom.model.Category;
 import com.ecom.model.Product;
+import com.ecom.model.User;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
+import com.ecom.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +44,20 @@ public class AdminController {
     private ProductService productService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     HelperServiceImpl helper;
+
+    @ModelAttribute
+    public void getUserDetails(Principal principal, Model model) {
+        if (principal != null) {
+            String email = principal.getName();
+            User loggedUser = userService.findUserByEmail(email);
+            model.addAttribute("user", loggedUser);
+        }
+    }
+
 
     @GetMapping("/")
     public String getIndex() {
@@ -185,11 +201,10 @@ public class AdminController {
         product.setProductImage(imageName);
 
         boolean validDiscount = helper.validateDiscountValue(product.getDiscount());
-        if (!validDiscount){
+        if (!validDiscount) {
             session.setAttribute("errorMsg", "Invalid Discount");
             return "redirect:/admin/editProduct/" + product.getProductId();
-        }
-        else {
+        } else {
             updatedproduct = productService.updateProduct(product);
 
             if (!ObjectUtils.isEmpty(updatedproduct)) {
