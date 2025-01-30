@@ -1,5 +1,6 @@
 package com.ecom.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -8,44 +9,49 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-@Configuration
+@Configuration // Marks this class as a configuration class for Spring Security
 public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); // Bean to encode passwords using BCrypt
     }
 
     @Bean
     public UserDetailsService userDetailService() {
-        return new UserDetailsServiceImpl();
+        return new UserDetailsServiceImpl(); // Custom implementation of UserDetailsService
     }
+
+    @Autowired
+    private AuthenticationSuccessHandler authenticationSuccessHandler; // Custom authentication success handler
 
     @Bean
     public DaoAuthenticationProvider getAuthenticationProvider(){
        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-       authenticationProvider.setUserDetailsService(userDetailService());
-       authenticationProvider.setPasswordEncoder(passwordEncoder());
+       authenticationProvider.setUserDetailsService(userDetailService()); // Setting custom user details service
+       authenticationProvider.setPasswordEncoder(passwordEncoder()); // Setting password encoder
        return authenticationProvider;
     }
 
     @Bean
     public SecurityFilterChain filterChain( HttpSecurity http) throws Exception{
         
-        //Disable CSRF
-        http.csrf( csrf -> csrf.disable())
-            .cors(cors -> cors.disable())
-            .authorizeHttpRequests(request -> request.requestMatchers("/user/**").hasRole("USER")
-                                                     .requestMatchers("/admin/**").hasRole("ADMIN")
-                                                     .requestMatchers("/**").permitAll())
-            .formLogin(form -> form.loginPage("/login")
-                                    .loginProcessingUrl("/login")
-                                    .defaultSuccessUrl("/"))
+        // Configuring security filters
+        http.csrf( csrf -> csrf.disable()) // Disabling CSRF protection
+            .cors(cors -> cors.disable()) // Disabling CORS
+            .authorizeHttpRequests(request -> request.requestMatchers("/user/**").hasRole("USER") // Restricting access to /user/** for ROLE_USER
+                                                     .requestMatchers("/admin/**").hasRole("ADMIN") // Restricting access to /admin/** for ROLE_ADMIN
+                                                     .requestMatchers("/**").permitAll()) // Allowing access to all other endpoints
             
-            .logout( logout -> logout.permitAll());
+            .formLogin(form -> form.loginPage("/login") // Custom login page URL
+                                    .loginProcessingUrl("/login") // URL to process login requests
+                                    .successHandler(authenticationSuccessHandler)) // Handling successful authentication
+            
+            .logout( logout -> logout.permitAll()); // Allowing all users to log out
         
-        return http.build();
+        return http.build(); // Building the security filter chain
     }
 
 }
