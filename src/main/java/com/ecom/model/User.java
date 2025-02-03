@@ -67,5 +67,10 @@ public class User {
 
     @Column(length = 255)
     private String role;
+
+    @Column(length = 255)
+    private boolean isEnabled;
+
+
 }
 

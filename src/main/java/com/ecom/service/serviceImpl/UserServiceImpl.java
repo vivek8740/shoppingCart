@@ -1,10 +1,11 @@
 package com.ecom.service.serviceImpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import com.ecom.model.User;
 import com.ecom.repository.UserRepository;
@@ -31,6 +32,16 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public List<User> getAllActiveUsers() {
+        return userRepository.findAll();
     }
 
 }
