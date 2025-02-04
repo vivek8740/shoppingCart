@@ -14,4 +14,8 @@ public interface UserService {
 
     List<User> getAllActiveUsers();
 
+    List<User> getAllUsers(String role);
+
+    public Boolean updateUserAccount(Long id, String status);
+
 }

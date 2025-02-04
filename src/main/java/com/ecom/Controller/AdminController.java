@@ -231,8 +231,18 @@ public class AdminController {
     /**************** User ********************/
     @GetMapping("/users")
     public String getAllUsers(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("users", userService.getAllUsers("ROLE_USER"));
         return "admin/view_users";
+    }
+
+    @GetMapping("/updateStatus")
+    public String updateUserAccountStatus(@RequestParam String status, @RequestParam Long id ,HttpSession session){
+        Boolean isModified = userService.updateUserAccount(id , status);
+        if (isModified)
+            session.setAttribute("successMsg", "User status updated.");
+        else
+            session.setAttribute("errorMsg", "Something Went Wrong!!!");
+        return "redirect:/admin/users";
     }
 
 }
