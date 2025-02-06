@@ -18,4 +18,9 @@ public interface UserService {
 
     public Boolean updateUserAccount(Long id, String status);
 
+
+    public void increaseFailedAttempt(User user);
+    public void userAccountLock(User user);
+    public boolean unLockAccountTimeExpired(User user);
+    public void restAttempt(Long userId);
 }

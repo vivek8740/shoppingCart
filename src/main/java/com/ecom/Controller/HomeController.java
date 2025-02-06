@@ -1,4 +1,4 @@
-package com.ecom.Controller;
+package com.ecom.controller;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -59,7 +59,11 @@ public class HomeController {
     }
 
     @GetMapping(value = "/")
-    public String getIndex() {
+    public String getIndex(Model model) {
+
+        List<Category> categories = categoryService.getActiveCategories();
+        model.addAttribute("categories", categories);
+
         logger.info("Accessed the home page.");
         return "index";
     }

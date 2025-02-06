@@ -1,4 +1,4 @@
-package com.ecom.Controller;
+package com.ecom.controller;
 
 import java.io.File;
 import java.io.IOException;

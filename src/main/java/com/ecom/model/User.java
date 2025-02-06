@@ -1,5 +1,7 @@
 package com.ecom.model;
 
+import java.util.Date;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -71,6 +73,8 @@ public class User {
     @Column(length = 255)
     private boolean isEnabled;
 
+    private Boolean accountNonLocked;
+    private int failedAttempt;
+    private Date lockTime;
 
 }
-

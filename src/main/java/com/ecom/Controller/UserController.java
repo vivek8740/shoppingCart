@@ -1,4 +1,4 @@
-package com.ecom.Controller;
+package com.ecom.controller;
 
 import java.security.Principal;
 import java.util.List;
