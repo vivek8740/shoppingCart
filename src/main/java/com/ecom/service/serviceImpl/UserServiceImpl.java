@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import com.ecom.helper.AppConstants;
+import com.ecom.helper.HelperService;
 import com.ecom.model.User;
 import com.ecom.repository.UserRepository;
 import com.ecom.service.UserService;
@@ -23,12 +25,17 @@ public class UserServiceImpl implements UserService{
     @Autowired
     PasswordEncoder encoder;
 
+    @Autowired
+    HelperService helperService;
+
     // Register new user
     @Transactional
     @Override
     public User registerUser(User user) {
        user.setRole("ROLE_USER");
        user.setEnabled(true);
+       user.setAccountNonLocked(true);
+       user.setFailedAttempt(0);
        user.setPassword(encoder.encode(user.getPassword()));
        return userRepository.save(user);
     }
@@ -84,7 +91,7 @@ public class UserServiceImpl implements UserService{
        long lockTime = user.getLockTime().getTime();
        long unlockTime = lockTime + AppConstants.UNLOCK_DURATION_TIME;
        long curretTime = System.currentTimeMillis();
-       if(unlockTime < curretTime){
+       if(curretTime < unlockTime){
             user.setAccountNonLocked(true);
             user.setFailedAttempt(0);
             user.setLockTime(null);

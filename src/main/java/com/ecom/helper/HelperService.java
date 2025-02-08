@@ -12,4 +12,8 @@ public interface HelperService {
 
     public boolean validateDiscountValue(int value);
 
+    public default Boolean sendMail(String email){
+        return true;
+    }
+
 }

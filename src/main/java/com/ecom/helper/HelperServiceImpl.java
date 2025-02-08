@@ -44,4 +44,5 @@ public class HelperServiceImpl implements HelperService {
     public boolean validateDiscountValue(int value) {
         return value >= 0 && value <= 100;
     }
+
 }

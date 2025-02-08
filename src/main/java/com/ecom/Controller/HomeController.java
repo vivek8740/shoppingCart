@@ -128,4 +128,33 @@ public class HomeController {
         model.addAttribute("product", productByID);
         return "view_product";
     }
+
+    @GetMapping("/forget-password")
+    public String showForgetPasswordPage(){
+        return "/user/forget-password";
+
+    }
+
+    @PostMapping("/forget-password")
+    public String processForgetPasswordPage(@RequestParam String email,HttpSession session){
+        User user = userService.findUserByEmail(email);
+        if(ObjectUtils.isEmpty(user)){
+            session.setAttribute("errorMsg", "Invalid Email.");
+        }
+        else{
+            Boolean status = helperService.sendMail(email);
+            if(status)
+            session.setAttribute("successMsg", "Reset links sent to the mail.");
+            else
+            session.setAttribute("errorMsg", "Something wrong with server. Unable to send reset link.");
+        }
+        return "redirect:/forget-password";
+
+    }
+
+    @GetMapping("/reset-user-password")
+    public String showResetPasswordPage(){
+        return "/user/reset-password";
+
+    }
 }
