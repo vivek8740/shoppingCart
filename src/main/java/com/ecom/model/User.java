@@ -76,7 +76,7 @@ public class User {
     private Boolean accountNonLocked;
     private int failedAttempt;
     private Date lockTime;
-    private String reset_token;
+    private String resetToken;
     
 
 }

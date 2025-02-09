@@ -112,14 +112,32 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updateResetTOken(String email, String token) {
+    public void updateResetToken(String email, String token) {
         User user = userRepository.findByEmail(email);
         if (!ObjectUtils.isEmpty(user)) {
-            user.setReset_token(token);
+            user.setResetToken(token);
             userRepository.save(user);
         }
         else
         throw new UsernameNotFoundException("User not available");
+    }
+
+    @Override
+    public User getUserByToken(String token) {
+        User user_based_on_token = userRepository.findByResetToken(token);
+        if(ObjectUtils.isEmpty(user_based_on_token))
+            throw new UsernameNotFoundException("User with provided token not available");
+        
+        return user_based_on_token;
+    }
+
+    @Override
+    public boolean resetUserPassword(String token, String password) {
+        User user = getUserByToken(token);
+        user.setPassword(encoder.encode(password));
+        user.setResetToken(null);
+        userRepository.save(user);
+        return true;
     }
     
 }

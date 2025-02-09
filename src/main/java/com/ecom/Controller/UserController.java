@@ -24,7 +24,8 @@ public class UserController {
 
     @Autowired
     private CategoryService categoryService;
-        @ModelAttribute
+    
+    @ModelAttribute
     public void getUserDetails(Principal principal , Model model){
         if(principal != null){
             String email = principal.getName();

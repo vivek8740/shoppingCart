@@ -148,7 +148,7 @@ public class HomeController {
         }
         else{
             String token = UUID.randomUUID().toString();
-            userService.updateResetTOken(email,token);
+            userService.updateResetToken(email,token);
             String url = helperService.generateURL(request)+"/reset-user-password?token="+token;
             Boolean status = helperService.sendMail(email,url);
             if(status){
@@ -162,8 +162,26 @@ public class HomeController {
     }
 
     @GetMapping("/reset-user-password")
-    public String showResetPasswordPage(){
+    public String showResetPasswordPage(@RequestParam String token,HttpSession session,Model model){
+        User user_based_on_token = userService.getUserByToken(token);
+        if(ObjectUtils.isEmpty(user_based_on_token)){
+            model.addAttribute("message", "Link Not valid or expired.");
+            return "message";
+        }
+        model.addAttribute("token", token);
         return "/user/reset-password";
+
+    }
+
+    @PostMapping("/reset-user-password")
+    public String resetPassword(@RequestParam String token,@RequestParam String password, HttpSession session,Model model){
+        Boolean status = userService.resetUserPassword(token,password);
+        if(!status){
+            model.addAttribute("message", "Link Not valid or expired.");
+            return "message";
+        }
+        model.addAttribute("message", "Password changes successfully.");
+        return "message";
 
     }
 }
