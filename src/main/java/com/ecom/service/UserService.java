@@ -23,4 +23,6 @@ public interface UserService {
     public void userAccountLock(User user);
     public boolean unLockAccountTimeExpired(User user);
     public void restAttempt(Long userId);
+
+    public void updateResetTOken(String email, String token);
 }

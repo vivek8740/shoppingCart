@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,6 +109,17 @@ public class UserServiceImpl implements UserService{
         user.setLockTime(new Date());
         userRepository.save(user);
         
+    }
+
+    @Override
+    public void updateResetTOken(String email, String token) {
+        User user = userRepository.findByEmail(email);
+        if (!ObjectUtils.isEmpty(user)) {
+            user.setReset_token(token);
+            userRepository.save(user);
+        }
+        else
+        throw new UsernameNotFoundException("User not available");
     }
     
 }

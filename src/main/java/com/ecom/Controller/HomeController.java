@@ -1,8 +1,11 @@
 package com.ecom.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.http.HttpRequest;
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,8 @@ import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
 
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -136,15 +141,19 @@ public class HomeController {
     }
 
     @PostMapping("/forget-password")
-    public String processForgetPasswordPage(@RequestParam String email,HttpSession session){
+    public String processForgetPasswordPage(@RequestParam String email,HttpSession session,HttpServletRequest request) throws UnsupportedEncodingException, MessagingException{
         User user = userService.findUserByEmail(email);
         if(ObjectUtils.isEmpty(user)){
             session.setAttribute("errorMsg", "Invalid Email.");
         }
         else{
-            Boolean status = helperService.sendMail(email);
-            if(status)
-            session.setAttribute("successMsg", "Reset links sent to the mail.");
+            String token = UUID.randomUUID().toString();
+            userService.updateResetTOken(email,token);
+            String url = helperService.generateURL(request)+"/reset-user-password?token="+token;
+            Boolean status = helperService.sendMail(email,url);
+            if(status){
+                session.setAttribute("successMsg", "Reset links sent to the mail.");
+            }
             else
             session.setAttribute("errorMsg", "Something wrong with server. Unable to send reset link.");
         }
