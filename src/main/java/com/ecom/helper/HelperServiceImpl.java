@@ -68,8 +68,8 @@ public class HelperServiceImpl implements HelperService {
         messageHelper.setFrom("vivek.raj7557@gmail.com", "Ecom");
         messageHelper.setTo(recipientEmail);
 
-        String content = "<p>Hello,</p>"+"<p>YOu have requested to reset your password.</p>"
-                                        +"<p>Click hte below link to update the password:</p>"
+        String content = "<p>Hello,</p>"+"<p>You have requested to reset your password.</p>"
+                                        +"<p>Click the below link to reset the password:X</p>"
                                         +"<p><a href=\"" + url +"\">Change Password</a></p>";
 
         messageHelper.setSubject("Reset Password");

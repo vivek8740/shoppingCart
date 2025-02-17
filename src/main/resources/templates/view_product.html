@@ -12,6 +12,16 @@
 
 			<div class="col-md-12 p-5">
 				<div class="row">
+						<th:block th:if="${session.successMsg}">
+                          <p class="text-success fw-bold text-center alert alert-success" role="alert">[[${session.successMsg}]]</p>
+                          <th:block th:text="${@helperServiceImpl.removeSessionMessage()}"></th:block>
+                        </th:block>
+
+                        <th:block th:if="${session.errorMsg}">
+                          <p class="text-danger fw-bold text-center alert-danger" role="alert">[[${session.errorMsg}]]</p>
+                          <th:block th:text="${@helperServiceImpl.removeSessionMessage()}"></th:block>
+                        </th:block>
+
 					<div class="col-md-6 text-end">
 						<img alt="" th:src="@{'/img/product_img/'+${product.productImage}}" width="330px"
 							height="400px">
@@ -58,7 +68,12 @@
 								<p>Free Shipping</p>
 							</div>
 							<th:block th:if="${product.stock>0}">
-								<a href="/login" class="btn btn-danger">Add to Cart</a>
+								<th:block th:if="${user==null}">
+									<a href="/login" class="btn btn-danger">Add to Cart</a>
+								</th:block>
+								<th:block th:unless="${user==null}">
+									<a th:href="@{'/user/addCart?uid='+${user.id}+'&pid='+${product.productId}}" class="btn btn-danger">Add to Cart</a>
+								</th:block>
 							</th:block>
 							<th:block th:unless="${product.stock>0}">
 								<a href="/login" class="btn btn-danger">Notify</a>
