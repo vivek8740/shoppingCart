@@ -2,7 +2,6 @@ package com.ecom.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.http.HttpRequest;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
@@ -21,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecom.helper.HelperService;
+import com.ecom.model.Cart;
 import com.ecom.model.Category;
 import com.ecom.model.Product;
 import com.ecom.model.User;
+import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
@@ -47,6 +48,9 @@ public class HomeController {
     private UserService userService;
 
     @Autowired
+    private CartService cartService;
+
+    @Autowired
     HelperService helperService;
 
     @ModelAttribute
@@ -55,6 +59,8 @@ public class HomeController {
             String email = principal.getName();
             User loggedUser = userService.findUserByEmail(email);
             model.addAttribute("user", loggedUser);
+            Integer cartCount = cartService.getCartProductCount(loggedUser.getId());
+            model.addAttribute("cartcount", cartCount);
         }
 
         List<Category> categories = categoryService.getActiveCategories();
@@ -183,5 +189,13 @@ public class HomeController {
         model.addAttribute("message", "Password changes successfully.");
         return "message";
 
+    }
+
+    @GetMapping("/cart/{userId}")
+    public String loadCartPage(Model model,@PathVariable Long userId){
+        logger.info("Fetching cart items.");
+        List<Cart> cartItems = cartService.getCartByUser(userId);
+        model.addAttribute("cartItems", cartItems);
+        return "cart";
     }
 }

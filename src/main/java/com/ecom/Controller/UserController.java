@@ -40,6 +40,8 @@ public class UserController {
             String email = principal.getName();
             User loggedUser = userService.findUserByEmail(email);
             model.addAttribute("user", loggedUser);
+            Integer cartCount = cartService.getCartProductCount(loggedUser.getId());
+            model.addAttribute("cartcount", cartCount);
         }
 
         List<Category> categories = categoryService.getActiveCategories();

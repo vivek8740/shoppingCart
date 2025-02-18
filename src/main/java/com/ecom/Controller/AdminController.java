@@ -23,6 +23,7 @@ import com.ecom.helper.HelperServiceImpl;
 import com.ecom.model.Category;
 import com.ecom.model.Product;
 import com.ecom.model.User;
+import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
@@ -47,6 +48,9 @@ public class AdminController {
     private UserService userService;
 
     @Autowired
+    private CartService cartService;
+
+    @Autowired
     HelperServiceImpl helper;
 
     @ModelAttribute
@@ -56,6 +60,8 @@ public class AdminController {
             String email = principal.getName();
             User loggedUser = userService.findUserByEmail(email);
             model.addAttribute("user", loggedUser);
+            Integer cartCount = cartService.getCartProductCount(loggedUser.getId());
+            model.addAttribute("cartcount", cartCount);
         }
 
         List<Category> categories = categoryService.getActiveCategories();

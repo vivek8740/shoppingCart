@@ -3,6 +3,7 @@ package com.ecom.service.serviceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -15,7 +16,7 @@ import com.ecom.repository.UserRepository;
 import com.ecom.service.CartService;
 
 @Service
-public class CartServiceImpl implements CartService{
+public class CartServiceImpl implements CartService {
 
     @Autowired
     private CartRepository cartRepository;
@@ -27,26 +28,20 @@ public class CartServiceImpl implements CartService{
     private ProductRepository productRepository;
 
     @Override
-    public List<Cart> getCartsByUser(Long userId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public Cart saveToCart(Long userId, Integer productId) {
         User user = userRepository.findById(userId).get();
         Product product = productRepository.findById(productId).get();
-        Cart availableCart = cartRepository.findByProduct_ProductIdAndUser_Id(productId,userId);
+        Cart availableCart = cartRepository.findByProduct_ProductIdAndUser_Id(productId, userId);
 
         Cart cart = null;
-        if(ObjectUtils.isEmpty(availableCart)){
+        if (ObjectUtils.isEmpty(availableCart)) {
             cart = new Cart();
             cart.setUser(user);
             cart.setProduct(product);
             cart.setQuantity(1);
             cart.setTotalPrice(1 * product.getDiscountPrice());
 
-        }else{
+        } else {
             cart = availableCart;
             cart.setQuantity(cart.getQuantity() + 1);
             cart.setTotalPrice(cart.getQuantity() * cart.getProduct().getDiscountPrice());
@@ -55,5 +50,27 @@ public class CartServiceImpl implements CartService{
         return savedCart;
     }
 
-    
+    @Override
+    public List<Cart> getCartByUser(Long userId) {
+        List<Cart> cartList = cartRepository.findByUser_Id(userId);
+        Double total = calculateCArtTotalPrice(cartList);
+        cartList.get(0).setTotalPrice(total);
+        return cartList;
+    }
+
+
+    @Override
+    public Integer getCartProductCount(Long userId) {
+        Integer count = cartRepository.countByUserId(userId);
+        return count;
+    }
+
+
+    private Double calculateCArtTotalPrice(List<Cart> cartList) {
+        Double price = 0.0;
+        for (Cart cart : cartList) {
+            price = cart.getProduct().getDiscountPrice() * cart.getQuantity() + price;
+        }
+        return price;
+    }
 }

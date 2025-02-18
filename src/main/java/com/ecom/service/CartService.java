@@ -8,6 +8,8 @@ public interface CartService {
 
     public Cart saveToCart(Long userId,Integer productId);
 
-    List<Cart> getCartsByUser(Long userId);
+    public List<Cart> getCartByUser(Long userId);
+
+    public Integer getCartProductCount(Long userId);
 
 }

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Cart</title>
+</head>
+
+<body>
+    <section>
+        <div class="container card-sh" style="margin-top: 100px;">
+
+            <div class="col-md-12 p-5">
+                <div class="row">
+                    <th:block th:if="${session.successMsg}">
+                        <p class="text-success fw-bold text-center alert alert-success" role="alert">[[${session.successMsg}]]</p>
+                        <th:block th:text="${@helperServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+                    <th:block th:if="${session.errorMsg}">
+                        <p class="text-danger fw-bold text-center alert alert-danger" role="alert">[[${session.errorMsg}]]</p>
+                        <th:block th:text="${@helperServiceImpl.removeSessionMessage()}"></th:block>
+                    </th:block>
+                    
+                    <div class="col-md-12">
+                        <h2 class="text-center">Your Shopping Cart</h2>
+                        
+                        <th:block th:if="${cartItems.size() > 0}">
+                            <table class="table table-bordered text-center">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Title</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="cartItem : ${cartItems}">
+                                        <td>
+                                            <img th:src="@{'/img/product_img/'+${cartItem.product.productImage}}" width="100px" height="100px">
+                                        </td>
+                                        <td>[[${cartItem.product.title}]]</td>
+                                        <td><i class="fas fa-rupee-sign"></i> [[${cartItem.product.discountPrice}]]</td>
+                                        <td>
+                                            <form th:action="@{/user/updateCart}" method="post">
+                                                <input type="hidden" name="cartId" th:value="${cartItem.cartId}">
+                                                <input type="number" name="quantity" th:value="${cartItem.quantity}" min="1" class="form-control w-50 mx-auto">
+                                                <button type="submit" class="btn btn-primary btn-sm mt-2">Update</button>
+                                            </form>
+                                        </td>
+                                        <td><i class="fas fa-rupee-sign"></i> [[${cartItem.product.discountPrice}]]</td>
+                                        <td>
+                                            <a th:href="@{'/user/removeCart/'+${cartItem.cartId}}" class="btn btn-danger btn-sm">Remove</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-end">
+                                <h4>Total Price: <i class="fas fa-rupee-sign"></i> [[${cartItems.get(0).totalPrice}]]</h4>
+                                <a href="/user/checkout" class="btn btn-success">Proceed to Checkout</a>
+                            </div>
+                        </th:block>
+                        
+                        <th:block th:unless="${cartItems.size() > 0}">
+                            <p class="text-center text-warning fs-4">Your cart is empty!</p>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
