@@ -3,7 +3,6 @@ package com.ecom.service.serviceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -53,8 +52,13 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<Cart> getCartByUser(Long userId) {
         List<Cart> cartList = cartRepository.findByUser_Id(userId);
-        Double total = calculateCArtTotalPrice(cartList);
-        cartList.get(0).setTotalPrice(total);
+        Double totalOrderPrice = 0.0;
+        for (Cart cart : cartList) {
+            Double price = cart.getProduct().getDiscountPrice() * cart.getQuantity();
+            cart.setTotalPrice(price);
+            totalOrderPrice = totalOrderPrice + price;
+            cart.setTotalOrderPrice(totalOrderPrice);
+        }
         return cartList;
     }
 
@@ -63,14 +67,5 @@ public class CartServiceImpl implements CartService {
     public Integer getCartProductCount(Long userId) {
         Integer count = cartRepository.countByUserId(userId);
         return count;
-    }
-
-
-    private Double calculateCArtTotalPrice(List<Cart> cartList) {
-        Double price = 0.0;
-        for (Cart cart : cartList) {
-            price = cart.getProduct().getDiscountPrice() * cart.getQuantity() + price;
-        }
-        return price;
     }
 }

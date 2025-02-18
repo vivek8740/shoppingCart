@@ -196,6 +196,8 @@ public class HomeController {
         logger.info("Fetching cart items.");
         List<Cart> cartItems = cartService.getCartByUser(userId);
         model.addAttribute("cartItems", cartItems);
+        Double totalOrderAmount = cartItems.get(cartItems.size() -1).getTotalOrderPrice();
+        model.addAttribute("totalOrderAmount", totalOrderAmount);
         return "cart";
     }
 }
