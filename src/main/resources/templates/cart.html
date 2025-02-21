@@ -31,7 +31,15 @@
                             <th scope="row">[[${c.count}]]</th>
                             <td><img th:src="@{'/img/product_img/'+${cart.product.productImage}}" width="50px" height="50px"></td>
                             <td>[[${cart.product.title}]]</td>
-                            <td>[[${cart.quantity}]]</td>
+                            <td>
+                              <a th:href="@{'/user/updateCartQuantity?sy=de&cid='+${cart.cartId}}">
+                                <i class="fa-solid fa-minus"></i>
+                              </a>
+                               [ [[${cart.quantity}]] ] 
+                               <a th:href="@{'/user/updateCartQuantity?sy=in&cid='+${cart.cartId}}">
+                                <i class="fa-solid fa-plus"></i>
+                              </a>
+                            </td>
                             <td>[[${cart.product.discountPrice}]]</td>
                             <td>[[${cart.totalPrice}]]</td>
                           </tr>

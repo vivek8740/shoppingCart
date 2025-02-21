@@ -64,4 +64,13 @@ public class UserController {
         session.setAttribute("successMsg", "Product added to cart.");
         return "redirect:/product/" + pid;
     }
+
+    @GetMapping("/updateCartQuantity")
+    public String updateCartQuantity(@RequestParam("sy") String sy, 
+                                     @RequestParam("cid") Integer cartId, 
+                                     Model model) {
+        cartService.updateCartQuantity(cartId, sy);
+        Long cartUserId = cartService.getUserByCartId(cartId).getId();
+        return "redirect:/cart/" + cartUserId ;
+    }
 }
