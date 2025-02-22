@@ -76,15 +76,19 @@ public class CartServiceImpl implements CartService {
 
         if(sy.equals("de")){
            newQuantity  = userCart.getQuantity() - 1;
-           if(userCart.getQuantity() <= 0){
-            cartRepository.deleteById(cartId);
+           if(newQuantity <= 0){
+            cartRepository.delete(userCart);
+           }else{
+            userCart.setQuantity(newQuantity);
+            cartRepository.save(userCart);
            }
         }
         else{
             newQuantity = userCart.getQuantity() + 1;
+            userCart.setQuantity(newQuantity);
+            cartRepository.save(userCart);
         }
-        userCart.setQuantity(newQuantity);
-        cartRepository.save(userCart);
+
     }
 
     @Override
